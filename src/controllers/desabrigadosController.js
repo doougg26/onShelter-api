@@ -41,6 +41,17 @@ const atualizarDesabrigado = async (req, res) => {
     try {
         const { id } = req.params;
         const { usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos } = req.body;
+        
+        // Verificar permissão: apenas o próprio usuário ou admin pode atualizar
+        const desabrigadoExistente = await desabrigadosModel.obterDesabrigadoPorId(id);
+        if (desabrigadoExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Desabrigado não encontrado' });
+        }
+        
+        if (req.usuario.id !== desabrigadoExistente.rows[0].usuario_id && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o próprio usuário ou administrador pode executar essa ação.' });
+        }
+        
         const desabrigado = await desabrigadosModel.atualizarDesabrigado(id, usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos);
         res.json({ message: 'Desabrigado atualizado com sucesso', desabrigado });
     } catch (error) {
@@ -96,6 +107,17 @@ const entrarAbrigo = async (req, res) => {
 const deletarDesabrigado = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Verificar permissão: apenas o próprio usuário ou admin pode deletar
+        const desabrigadoExistente = await desabrigadosModel.obterDesabrigadoPorId(id);
+        if (desabrigadoExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Desabrigado não encontrado' });
+        }
+        
+        if (req.usuario.id !== desabrigadoExistente.rows[0].usuario_id && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o próprio usuário ou administrador pode executar essa ação.' });
+        }
+        
         const desabrigado = await desabrigadosModel.deletarDesabrigado(id);
         if (desabrigado.rows.length === 0) {
             return res.status(404).json({ message: 'Desabrigado não encontrado' });

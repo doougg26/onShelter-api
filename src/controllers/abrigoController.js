@@ -40,6 +40,17 @@ const editarAbrigo = async (req, res) => {
     try {
         const { id } = req.params;
         const { nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao } = req.body;   
+        
+        // Verificar permissão: apenas o gerente do abrigo ou admin pode atualizar
+        const abrigoExistente = await abrigosModel.obterAbrigoPorId(id);
+        if (abrigoExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Abrigo não encontrado' });
+        }
+        
+        if (req.usuario.id !== abrigoExistente.rows[0].gerente_id && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o gerente do abrigo ou administrador pode executar essa ação.' });
+        }
+        
         const abrigo = await abrigosModel.atualizarAbrigo(id, nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao);
         res.status(200).json({ message: 'Abrigo atualizado com sucesso', abrigo });
     } catch (error) {
@@ -51,6 +62,17 @@ const editarAbrigo = async (req, res) => {
 const removerAbrigo = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Verificar permissão: apenas o gerente do abrigo ou admin pode deletar
+        const abrigoExistente = await abrigosModel.obterAbrigoPorId(id);
+        if (abrigoExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Abrigo não encontrado' });
+        }
+        
+        if (req.usuario.id !== abrigoExistente.rows[0].gerente_id && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o gerente do abrigo ou administrador pode executar essa ação.' });
+        }
+        
         const abrigo = await abrigosModel.deletarAbrigo(id);
         if (abrigo.rows.length === 0) {
             return res.status(404).json({ message: 'Abrigo não encontrado' });

@@ -45,6 +45,12 @@ const atualizarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
         const { nome_completo, telefone, email, hash_senha, role } = req.body;
+        
+        // Verificar permissão: apenas o próprio usuário ou admin pode atualizar
+        if (req.usuario.id !== parseInt(id) && req.usuario.role !== 'admin') {
+            return res.status(403).json({ error: 'Acesso negado. Apenas o próprio usuário ou administrador pode executar essa ação.' });
+        }
+        
         const usuarioExistente = await usuariomodel.obterUsuarioPorId(id);
         if (usuarioExistente.rows.length === 0) {
             return res.status(404).json({ error: 'Usuario não encontrado' });
@@ -68,8 +74,12 @@ const atualizarUsuario = async (req, res) => {
 
 const deletarUsuario = async (req, res) => {
     try {
-
         const { id } = req.params;
+        
+        // Verificar permissão: apenas o próprio usuário ou admin pode deletar
+        if (req.usuario.id !== parseInt(id) && req.usuario.role !== 'admin') {
+            return res.status(403).json({ error: 'Acesso negado. Apenas o próprio usuário ou administrador pode executar essa ação.' });
+        }
 
         // const usuario = await usuariomodel.obterUsuarioPorId(id);
         // if (usuario.rows.length === 0) {

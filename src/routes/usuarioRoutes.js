@@ -7,7 +7,7 @@ const { auth, checarRole } = require('../middlewares/auth');
 router.post('/usuarios', validarUsuario, controller.criarUsuario);
 router.get('/usuarios', controller.obterUsuarios);
 router.get('/usuarios/:id', auth,controller.obterUsuarioPorId);
-router.put('/usuarios/:id', validarUsuario, controller.atualizarUsuario);
-router.delete('/usuarios/:id',auth,checarRole('admin'), controller.deletarUsuario);
+router.put('/usuarios/:id', auth, validarUsuario, controller.atualizarUsuario);
+router.delete('/usuarios/:id', auth, controller.deletarUsuario);
 
 module.exports = router;

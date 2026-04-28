@@ -39,6 +39,17 @@ const editarPet = async (req, res) => {
     try {
         const { id } = req.params; 
         const { nome, especie, raca, genero, tamanho, foto_url, descricao, id_dono, id_abrigo, status } = req.body;
+        
+        // Verificar permissão: apenas o dono do pet ou admin pode atualizar
+        const petExistente = await petsModel.obterPetPorId(id);
+        if (petExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Pet não encontrado' });
+        }
+        
+        if (req.usuario.id !== petExistente.rows[0].id_dono && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o dono do pet ou administrador pode executar essa ação.' });
+        }
+        
         const pet = await petsModel.atualizarPet(id, nome, especie, raca, genero, tamanho, foto_url, descricao, id_dono, id_abrigo, status);
         res.status(200).json({ message: 'Pet atualizado com sucesso', pet });
     } catch (error) {
@@ -50,6 +61,17 @@ const editarPet = async (req, res) => {
 const removerPet = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Verificar permissão: apenas o dono do pet ou admin pode deletar
+        const petExistente = await petsModel.obterPetPorId(id);
+        if (petExistente.rows.length === 0) {
+            return res.status(404).json({ message: 'Pet não encontrado' });
+        }
+        
+        if (req.usuario.id !== petExistente.rows[0].id_dono && req.usuario.role !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado. Apenas o dono do pet ou administrador pode executar essa ação.' });
+        }
+        
         const pet = await petsModel.deletarPet(id);
         if (pet.rows.length === 0) {
             return res.status(404).json({ message: 'Pet não encontrado' });
