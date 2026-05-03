@@ -2,7 +2,7 @@
 const joi = require('joi');
 
 const schema = joi.object({
-    usuario_id: joi.number().integer().required(),
+    usuario_id: joi.number().integer().allow(null),
     nome_completo: joi.string().max(100).required(),
     tamanho_familia: joi.number().integer().min(1).required(),
     contato: joi.string().max(20).required(),
