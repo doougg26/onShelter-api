@@ -1,10 +1,10 @@
-//campos da tabela abrigos: nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao
+//campos da tabela abrigos: nome, endereco, ultima_localizacao, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao
 const abrigosModel = require('../models/abrigosModel');
 
 const addAbrigo = async (req, res) => {
     try {
-        const { nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao } = req.body;
-        const abrigo = await abrigosModel.cadastrarAbrigo(nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao);
+        const { nome, endereco, ultima_localizacao, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao } = req.body;
+        const abrigo = await abrigosModel.cadastrarAbrigo(nome, endereco, ultima_localizacao, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao);
         res.status(201).json({ message: 'Abrigo cadastrado com sucesso', abrigo });
     } catch (error) {
         console.error('Erro ao cadastrar abrigo:', error);
@@ -39,7 +39,7 @@ const buscarAbrigoPorId = async (req, res) => {
 const editarAbrigo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao } = req.body;   
+        const { nome, endereco, ultima_localizacao, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao } = req.body;   
         
         // Verificar permissão: apenas o gerente do abrigo ou admin pode atualizar
         const abrigoExistente = await abrigosModel.obterAbrigoPorId(id);
@@ -51,7 +51,7 @@ const editarAbrigo = async (req, res) => {
             return res.status(403).json({ message: 'Acesso negado. Apenas o gerente do abrigo ou administrador pode executar essa ação.' });
         }
         
-        const abrigo = await abrigosModel.atualizarAbrigo(id, nome, endereco, cep, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao);
+        const abrigo = await abrigosModel.atualizarAbrigo(id, nome, endereco, ultima_localizacao, latitude, longitude, capacidade_total, capacidade_atual, aceita_pets, capacidade_pets, capacidade_atual_pets, contato, gerente_id, verificacao);
         res.status(200).json({ message: 'Abrigo atualizado com sucesso', abrigo });
     } catch (error) {
         console.error('Erro ao atualizar abrigo:', error);

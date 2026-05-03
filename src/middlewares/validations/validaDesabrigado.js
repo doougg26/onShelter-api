@@ -6,9 +6,9 @@ const schema = joi.object({
     nome_completo: joi.string().max(100).required(),
     tamanho_familia: joi.number().integer().min(1).required(),
     contato: joi.string().max(20).required(),
-    cep: joi.string().pattern(/^\d{8}$/).required(),
-    latitude: joi.number().precision(10).required(),
-    longitude: joi.number().precision(10).required(),
+    ultima_localizacao: joi.string().max(255).required(),
+    latitude: joi.number().precision(10).allow(null),
+    longitude: joi.number().precision(10).allow(null),
     id_abrigo_atual: joi.number().integer().allow(null),
     status: joi.string().max(50).required(),
     detalhes_medicos: joi.string().max(255).allow(null)
