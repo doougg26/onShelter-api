@@ -4,9 +4,9 @@ const joi = require('joi');
 const schema = joi.object({
     nome: joi.string().max(100).required(),
     endereco: joi.string().max(255).required(),
-    cep: joi.string().pattern(/^\d{8}$/).required(),
-    latitude: joi.number().precision(10).required(),
-    longitude: joi.number().precision(10).required(),
+    cep: joi.string().pattern(/^\d{8}$/).allow(null),
+    latitude: joi.number().precision(10).allow(null),
+    longitude: joi.number().precision(10).allow(null),
     capacidade_total: joi.number().integer().min(0).required(),
     capacidade_atual: joi.number().integer().min(0).required(),
     aceita_pets: joi.boolean().required(),
