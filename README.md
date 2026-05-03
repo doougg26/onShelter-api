@@ -845,7 +845,3 @@ curl -X POST http://localhost:3000/api/abrigos \
 - **Variáveis de Ambiente:** Configure `.env` com suas credenciais
 
 ---
-
-## 📞 Suporte
-
-Para dúvidas ou problemas, consulte a [Documentação do Frontend](./DOCUMENTACAO_FRONTEND.md) ou entre em contato com o time de desenvolvimento.
