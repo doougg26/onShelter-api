@@ -1,11 +1,11 @@
-// CAMPOS DA TABELA DESABRIGADDOS: usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos
+// CAMPOS DA TABELA DESABRIGADDOS: usuario_id, nome_completo, tamanho_familia, contato, ultima_localizacao, latitude, longitude, id_abrigo_atual, status, detalhes_medicos
 const desabrigadosModel = require('../models/desabrigadosModel');
 const abrigosModel = require('../models/abrigosModel');
 
 const cadastrarDesabrigado = async (req, res) => {
     try {
-        const { usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos } = req.body;
-        const desabrigado = await desabrigadosModel.cadastrarDesabrigado(usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos);
+        const { usuario_id, nome_completo, tamanho_familia, contato, ultima_localizacao, latitude, longitude, id_abrigo_atual, status, detalhes_medicos } = req.body;
+        const desabrigado = await desabrigadosModel.cadastrarDesabrigado(usuario_id, nome_completo, tamanho_familia, contato, ultima_localizacao, latitude, longitude, id_abrigo_atual, status, detalhes_medicos);
         res.status(201).json({ message: 'Desabrigado cadastrado com sucesso', desabrigado });
     } catch (error) {
         console.error('Erro ao cadastrar desabrigado:', error);
@@ -40,7 +40,7 @@ const obterDesabrigadoPorId = async (req, res) => {
 const atualizarDesabrigado = async (req, res) => {
     try {
         const { id } = req.params;
-        const { usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos } = req.body;
+        const { usuario_id, nome_completo, tamanho_familia, contato, ultima_localizacao, latitude, longitude, id_abrigo_atual, status, detalhes_medicos } = req.body;
         
         // Verificar permissão: apenas o próprio usuário ou admin pode atualizar
         const desabrigadoExistente = await desabrigadosModel.obterDesabrigadoPorId(id);
@@ -52,7 +52,7 @@ const atualizarDesabrigado = async (req, res) => {
             return res.status(403).json({ message: 'Acesso negado. Apenas o próprio usuário ou administrador pode executar essa ação.' });
         }
         
-        const desabrigado = await desabrigadosModel.atualizarDesabrigado(id, usuario_id, nome_completo, tamanho_familia, contato, cep, latitude, longitude, id_abrigo_atual, status, detalhes_medicos);
+        const desabrigado = await desabrigadosModel.atualizarDesabrigado(id, usuario_id, nome_completo, tamanho_familia, contato, ultima_localizacao, latitude, longitude, id_abrigo_atual, status, detalhes_medicos);
         res.json({ message: 'Desabrigado atualizado com sucesso', desabrigado });
     } catch (error) {
         console.error('Erro ao atualizar desabrigado:', error);
